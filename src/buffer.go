@@ -1046,23 +1046,23 @@ func thirdPartyBuffer(streamID int, playlistID string, useBackup bool, backupNum
 		var streamStatus = make(chan bool)
 
 		var tmpFolder = playlist.Streams[streamID].Folder
-		url = transformURL(playlist.Streams[streamID].URL)
-		
+		streamURL = transformURL(playlist.Streams[streamID].URL)
+
 		if useBackup {
 			if backupNumber >= 1 && backupNumber <= 3 {
 				switch backupNumber {
 				case 1:
-					url = stream.BackupChannel1.URL
+					streamURL  = stream.BackupChannel1.URL
 					showHighlight("START OF BACKUP 1 STREAM")
-					showInfo("Backup Channel 1 URL: " + url)
+					showInfo("Backup Channel 1 URL: " + streamURL )
 				case 2:
-					url = stream.BackupChannel2.URL
+					streamURL  = stream.BackupChannel2.URL
 					showHighlight("START OF BACKUP 2 STREAM")
-					showInfo("Backup Channel 2 URL: " + url)
+					showInfo("Backup Channel 2 URL: " + streamURL )
 				case 3:
 					url = stream.BackupChannel3.URL
 					showHighlight("START OF BACKUP 3 STREAM")
-					showInfo("Backup Channel 3 URL: " + url)
+					showInfo("Backup Channel 3 URL: " + streamURL )
 				}
 			}
 		}
@@ -1076,8 +1076,8 @@ func thirdPartyBuffer(streamID int, playlistID string, useBackup bool, backupNum
 		case "ffmpeg":
 
 			if Settings.FFmpegForceHttp {
-				url = strings.Replace(url, "https://", "http://", -1)
-				showInfo("Forcing URL to HTTP for FFMPEG: " + url)
+				streamURL  = strings.Replace(streamURL , "https://", "http://", -1)
+				showInfo("Forcing URL to HTTP for FFMPEG: " + streamURL )
 			}
 
 			path = Settings.FFmpegPath
@@ -1133,7 +1133,7 @@ func thirdPartyBuffer(streamID int, playlistID string, useBackup bool, backupNum
 		}
 
 		showInfo(fmt.Sprintf("%s path:%s", bufferType, path))
-		showInfo("Streaming URL:" + url)
+		showInfo("Streaming URL:" + streamURL )
 
 		var tmpFile = fmt.Sprintf("%s%d.ts", tmpFolder, tmpSegment)
 
@@ -1155,7 +1155,7 @@ func thirdPartyBuffer(streamID int, playlistID string, useBackup bool, backupNum
 
 			switch bufferType {
 			case "FFMPEG":
-				a = strings.Replace(a, "[URL]", url, -1)
+				a = strings.Replace(a, "[URL]", streamURL , -1)
 				if i == 0 {
 					if len(Settings.UserAgent) != 0 {
 						args = []string{"-user_agent", Settings.UserAgent}
@@ -1181,7 +1181,7 @@ func thirdPartyBuffer(streamID int, playlistID string, useBackup bool, backupNum
 
 			case "VLC":
 				if a == "[URL]" {
-					a = strings.Replace(a, "[URL]", url, -1)
+					a = strings.Replace(a, "[URL]", streamURL , -1)
 					args = append(args, a)
 
 					if len(Settings.UserAgent) != 0 {
