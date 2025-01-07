@@ -1046,7 +1046,7 @@ func thirdPartyBuffer(streamID int, playlistID string, useBackup bool, backupNum
 		var streamStatus = make(chan bool)
 
 		var tmpFolder = playlist.Streams[streamID].Folder
-		streamURL = transformURL(playlist.Streams[streamID].URL)
+		var streamURL = transformURL(playlist.Streams[streamID].URL)
 
 		if useBackup {
 			if backupNumber >= 1 && backupNumber <= 3 {
@@ -1060,7 +1060,7 @@ func thirdPartyBuffer(streamID int, playlistID string, useBackup bool, backupNum
 					showHighlight("START OF BACKUP 2 STREAM")
 					showInfo("Backup Channel 2 URL: " + streamURL )
 				case 3:
-					url = stream.BackupChannel3.URL
+					streamURL = stream.BackupChannel3.URL
 					showHighlight("START OF BACKUP 3 STREAM")
 					showInfo("Backup Channel 3 URL: " + streamURL )
 				}
