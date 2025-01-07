@@ -1014,6 +1014,23 @@ func switchBandwidth(stream *ThisStream) (err error) {
 	return
 }
 
+func transformURL(originalURL string) string {
+    // Base proxy server URL
+    proxyBase := "http://192.168.0.205:34401"
+    
+    // URL encode the original URL
+    encodedURL := url.QueryEscape(originalURL)
+    
+    // Fixed data portion that needs to be appended
+    fixedData := "UmVmZXJlcj1odHRwczovL2Nvb2tpZXdlYnBsYXkueHl6L3xPcmlnaW49aHR0cHM6Ly9jb29raWV3ZWJwbGF5Lnh5enxVc2VyLUFnZW50PU1vemlsbGEvNS4wIChYMTE7IExpbnV4IHg4Nl82NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEyOS4wLjAuMCBTYWZhcmkvNTM3LjM2"
+    
+    // Construct the final URL
+    transformedURL := fmt.Sprintf("%s?url=%s%%0D&data=%s", proxyBase, encodedURL, fixedData)
+    
+    return transformedURL
+}
+
+
 // Buffer mit FFMPEG
 func thirdPartyBuffer(streamID int, playlistID string, useBackup bool, backupNumber int) {
 
@@ -1029,7 +1046,8 @@ func thirdPartyBuffer(streamID int, playlistID string, useBackup bool, backupNum
 		var streamStatus = make(chan bool)
 
 		var tmpFolder = playlist.Streams[streamID].Folder
-		var url = playlist.Streams[streamID].URL
+		url = transformURL(playlist.Streams[streamID].URL)
+		
 		if useBackup {
 			if backupNumber >= 1 && backupNumber <= 3 {
 				switch backupNumber {
